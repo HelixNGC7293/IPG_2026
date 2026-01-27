@@ -5,8 +5,7 @@ using UnityEngine.EventSystems;
 
 public class SimpleDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
-	[HideInInspector]
-	public RectTransform rectTrans;
+	RectTransform rectTrans;
 	bool isDragging = false;
 
 	// Start is called before the first frame update
@@ -14,12 +13,6 @@ public class SimpleDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDr
 	{
 		rectTrans = GetComponent<RectTransform>();
 	}
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
 	//Drag Detection
 	public void OnBeginDrag(PointerEventData eventData)
@@ -39,14 +32,19 @@ public class SimpleDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDr
 		{
 			if (isDragging)
 			{
-				Vector3 globalMousePos;
-				if (RectTransformUtility.ScreenPointToWorldPointInRectangle(rectTrans, eventData.position, eventData.pressEventCamera, out globalMousePos))
-				{
-					rectTrans.position = globalMousePos;
-				}
+				rectTrans.anchoredPosition += eventData.delta;
 
-				//Another way: control anchoredPosition Vector2 to make it follow the mouse
+				//Another way 1: control anchoredPosition Vector2 to make it follow the mouse
 				//rectTrans.anchoredPosition = eventData.position - new Vector2(Screen.width / 2, Screen.height / 2);
+
+				//Another way 2: convert global position to move the card
+				//Vector3 globalMousePos;
+				//if (RectTransformUtility.ScreenPointToWorldPointInRectangle(rectTrans, eventData.position, eventData.pressEventCamera, out globalMousePos))
+				//{
+				//	rectTrans.position = globalMousePos;
+				//}
+
+
 			}
 		}
 	}

@@ -18,6 +18,7 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 	[SerializeField]
 	TextMeshProUGUI text_Cost;
 	//Card 2D transform (RectTransform)
+	//Be public for CardManager.TakingEffectCheck()
 	[HideInInspector]
 	public RectTransform rectTrans;
 
