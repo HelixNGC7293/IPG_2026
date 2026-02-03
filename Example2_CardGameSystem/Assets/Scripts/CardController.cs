@@ -75,7 +75,11 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
 	void Update()
 	{
-		if ((!mouseRollOver && !isDragging) || (!allowSelect && mouseRollOver) || CardManager.gameStatus != GameStatus.Ready)
+		if ((!mouseRollOver && !isDragging) 
+			|| 
+			(!allowSelect && mouseRollOver) 
+			|| 
+			CardManager.gameStatus != GameStatus.Ready)
 		{
 			//1.Nothing happens || 2.Card moving back but mouse roll over || 3.Not in player phase
 			//1.Lerp movement. Move the card back to the hands (screen bottom)
@@ -86,7 +90,7 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 		}
 		else if (allowSelect && mouseRollOver && !isDragging)
 		{
-			//Mouse Roll Over, change card Y to fixed position & make it bigger
+			//Allow Select && Mouse Roll Over && Currently the player is not dragging this card, change card Y to fixed position & make it bigger
 			rectTrans.localScale = hoveringScale;
 			rectTrans.anchoredPosition = new Vector2(targetPosition.x, hoveringY);
 			//Keep it straight
@@ -159,7 +163,7 @@ public class CardController : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 			{
 				//End Drag
 				isDragging = false;
-				//Check if player drag the card to the right area
+				//Check if player drag the card to the middle-top area of the screen
 				if (CardManager.gameStatus == GameStatus.Ready)
 				{
 					//Taking effects

@@ -66,7 +66,57 @@ public class CardManager : MonoBehaviour
 
 		RoundStart();
 	}
-	
+
+	//Start Round
+	public void RoundStart()
+	{
+		gameStatus = GameStatus.Start;
+		cards_Hand.Clear();
+		//Get new cards
+		cardDrawingIndex = 0;
+		//cards_DrawPile = cards;
+		isDrawingCards = true;
+
+		//Display UI text
+		text_Message.text = currentEnergy == -1 ? "~ Welcome ~" : "Next Round Starts !";
+		currentEnergy = defaultEnergy;
+		text_Energy.text = currentEnergy.ToString();
+	}
+
+	//End Round
+	public void RoundEnd()
+	{
+		if (gameStatus == GameStatus.Ready)
+		{
+			gameStatus = GameStatus.End;
+			if (cards_Hand.Count > 0)
+			{
+				//Discard all the hand cards
+				foreach (CardController cardController in cards_Hand)
+				{
+
+					cards_DiscardPile.Add(cardController.cardProperty);
+				}
+			}
+
+			RelocateAllCards();
+			Invoke("CleanHandsAndStartNextRound", 0.6f);
+		}
+	}
+
+	void CleanHandsAndStartNextRound()
+	{
+		//Round end of special card ability
+		foreach (CardController cardController in cards_Hand)
+		{
+			Destroy(cardController.gameObject);
+		}
+		cards_Hand.Clear();
+
+		//Next Round
+		RoundStart();
+	}
+
 	// Update is called once per frame
 	void Update () {
 		//Card shows up one by one
@@ -74,7 +124,8 @@ public class CardManager : MonoBehaviour
 		{
 			if (cardDrawingTimer > cardDrawingTimerTotal)
 			{
-				if(cards_DrawPile.Count == 0)
+				cardDrawingTimer = 0;
+				if (cards_DrawPile.Count == 0)
 				{
 					//Refill cards from discard pile
 					foreach (CardProperty cP in cards_DiscardPile)
@@ -86,7 +137,6 @@ public class CardManager : MonoBehaviour
 				CardController card;
 
 				//Generate Player card
-				cardDrawingTimer = 0;
 
 				card = Instantiate(cardPrefab);
 				RectTransform cardTrans = card.GetComponent<RectTransform>();
@@ -135,7 +185,7 @@ public class CardManager : MonoBehaviour
 			}
 			else if (cards_Hand.Count == 1)
 			{
-				//If only 1 hand card is left, keep it in the center of bottom screen
+				//If only 1 hand card remains, keep it in the center of bottom screen
 				cards_Hand[0].targetPosition = Vector2.zero;
 				cards_Hand[0].targetRotation = Quaternion.Euler(Vector3.zero);
 			}
@@ -158,7 +208,7 @@ public class CardManager : MonoBehaviour
 					Vector2 targetPosition = new Vector2((i - middleIndex) * cardInterval, Mathf.Abs(middleIndex - i) * cardInterval * -0.2f);
 					if (selectedCard != null)
 					{
-						//Move away from selected card
+						//Move away from the selected card
 						if (i < selectedCardIndex)
 						{
 							targetPosition.x -= 20000 / cardInterval;
@@ -168,61 +218,13 @@ public class CardManager : MonoBehaviour
 							targetPosition.x += 20000 / cardInterval;
 						}
 					}
+
+					//Assign position and rotation
 					cardController.targetPosition = targetPosition;
 					cardController.targetRotation = Quaternion.Euler(0, 0, (middleIndex - i) * cardInterval * 0.08f);
 				}
 			}
 		}
-	}
-
-	//Start Round
-	public void RoundStart()
-	{
-		gameStatus = GameStatus.Start;
-		cards_Hand.Clear();
-		//Get new cards
-		cardDrawingIndex = 0;
-		//cards_DrawPile = cards;
-		isDrawingCards = true;
-
-		//Display UI text
-		text_Message.text = currentEnergy == -1 ? "~ Welcome ~" : "Next Round Starts !";
-		currentEnergy = defaultEnergy;
-		text_Energy.text = currentEnergy.ToString();
-	}
-	
-	//End Round
-	public void RoundEnd()
-	{
-		if (gameStatus == GameStatus.Ready)
-		{
-			gameStatus = GameStatus.End;
-			if (cards_Hand.Count > 0)
-			{
-				//Discard all the hand cards
-				foreach (CardController cardController in cards_Hand)
-				{
-
-					cards_DiscardPile.Add(cardController.cardProperty);
-				}
-			}
-
-			RelocateAllCards();
-			Invoke("CleanHandsAndStartNextRound", 0.6f);
-		}
-	}
-
-	void CleanHandsAndStartNextRound()
-	{
-		//Round end of special card ability
-		foreach(CardController cardController in cards_Hand)
-		{
-			Destroy(cardController.gameObject);
-		}
-		cards_Hand.Clear();
-
-		//Next Round
-		RoundStart();
 	}
 
 	//Applying card effect
@@ -272,7 +274,7 @@ public class CardManager : MonoBehaviour
 		return false;
 	}
 
-	//After using a card, discord it
+	//After using a card, discard it
 	void MoveCardToDiscardPile(CardController cardController)
 	{
 		cards_DiscardPile.Add(cardController.cardProperty);
