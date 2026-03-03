@@ -19,13 +19,13 @@ public class EnemyLV3 : EnemyBase
     }
     protected override void TimerContent()
     {
-        //Recover health
         nav.SetDestination(target.position);
     }
     protected override void Death()
     {
 		if (secondChance)
 		{
+			//Revive and get angry
 			secondChance = false;
             hp = hpTotal;
             nav.speed *= 2;
