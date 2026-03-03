@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyLV3 : EnemyBase
 {
-    bool secondChange = true;
+    bool secondChance = true;
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -24,9 +24,9 @@ public class EnemyLV3 : EnemyBase
     }
     protected override void Death()
     {
-		if (secondChange)
+		if (secondChance)
 		{
-            secondChange = false;
+			secondChance = false;
             hp = hpTotal;
             nav.speed *= 2;
         }
