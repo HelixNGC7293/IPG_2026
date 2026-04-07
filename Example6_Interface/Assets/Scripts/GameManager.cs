@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
 
 
 public class GameManager : MonoBehaviour
@@ -29,9 +30,14 @@ public class GameManager : MonoBehaviour
     PlayerUnit playerUnit_Prefab;
 	//Player Container
 	[SerializeField]
+	//Door ability
     Transform playerGroup;
+    // Reference to the Input Component
+	private PlayerInput playerInput; 
+	// Input Action references to avoid string lookups in Update
+	private InputAction moveAction;
 
-    public Transform playerTarget;
+	public Transform playerTarget;
 	//Display how many players
 	int _playerNum;
     int PlayerNum {
@@ -61,13 +67,15 @@ public class GameManager : MonoBehaviour
         instance = this;
         PlayerNum = 0;
         CreateUnit(1);
-    }
+		playerInput = GetComponent<PlayerInput>();
+		moveAction = playerInput.actions["Move"];
+	}
 
     // Update is called once per frame
     void Update()
-    {
-        var horizontal = Input.GetAxis("Horizontal");
-        playerTarget.Translate(Vector3.right * horizontal * speed * Time.deltaTime);
+	{
+		Vector2 inputVector = moveAction.ReadValue<Vector2>();
+		playerTarget.Translate(Vector3.right * inputVector.x * speed * Time.deltaTime);
         if (playerTarget.position.x < -5)
 		{
             playerTarget.position = new Vector3(-5, playerTarget.position.y, playerTarget.position.z);

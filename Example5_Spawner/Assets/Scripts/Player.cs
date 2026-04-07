@@ -5,7 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-	private PlayerInput playerInput; // 2. Reference to the Input Component
+    // Reference to the Input Component
+	private PlayerInput playerInput; 
 
 	// Input Action references to avoid string lookups in Update
 	private InputAction moveAction;
