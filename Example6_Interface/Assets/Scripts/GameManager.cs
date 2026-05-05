@@ -7,8 +7,10 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
-    //Door ability
-    public struct Ability
+	public static GameManager instance;
+
+	//Door ability
+	public struct Ability
     {
         public int abilityID;
         public int abilityPower;
@@ -17,8 +19,9 @@ public class GameManager : MonoBehaviour
             abilityID = _abilityID;
             abilityPower = _abilityPower;
         }
-    }
-    public static GameManager instance;
+	}
+	[HideInInspector]
+	public string[] abilityName = { "+", "-", "x", "÷" };
 
     [SerializeField]
     TextMeshPro tX_PlayerNum;
@@ -30,7 +33,6 @@ public class GameManager : MonoBehaviour
     PlayerUnit playerUnit_Prefab;
 	//Player Container
 	[SerializeField]
-	//Door ability
     Transform playerGroup;
     // Reference to the Input Component
 	private PlayerInput playerInput; 
@@ -53,11 +55,9 @@ public class GameManager : MonoBehaviour
     int playerVisualMaxNum = 100;
     float speed = 10;
 
-    [HideInInspector]
-    public string[] abilityName = { "+", "-", "x", "÷"};
-
     List<PlayerUnit> playerUnitList = new List<PlayerUnit>();
 
+    //Get spawn timer
     float gateTimer = 0;
     float gateTimerTotal = 1;
 
